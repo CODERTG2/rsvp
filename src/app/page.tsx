@@ -228,7 +228,7 @@ export default function Home() {
         <section className="rsvp-section">
           <div className="rsvp-card">
             <h1 className="rsvp-title">RSVP</h1>
-            <p className="rsvp-subtitle">Kindly respond by May 18th, 2026</p>
+            <p className="rsvp-subtitle">Kindly respond by May 10th, 2026</p>
             <div className="gold-line-wide" style={{ marginBottom: 28 }} />
 
             <form onSubmit={handleSubmit} id="rsvp-form">
@@ -376,13 +376,12 @@ export default function Home() {
 
             {status && (
               <div
-                className={`status-message ${
-                  status.type === "success"
+                className={`status-message ${status.type === "success"
                     ? "status-success"
                     : status.type === "error"
                       ? "status-error"
                       : "status-info"
-                }`}
+                  }`}
                 id="status-message"
               >
                 {status.message}
