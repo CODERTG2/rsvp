@@ -34,6 +34,7 @@ export async function GET(request: NextRequest) {
         name: existing.name,
         contact: existing.contact,
         contactType: existing.contactType,
+        attending: existing.attending !== undefined ? existing.attending : true,
         adults: existing.adults,
         children: existing.children,
       },
@@ -47,7 +48,7 @@ export async function GET(request: NextRequest) {
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
-    const { name, contact, contactType, adults, children } = body;
+    const { name, contact, contactType, attending, adults, children } = body;
 
     // Validation
     if (!name || !contact || !contactType) {
@@ -74,8 +75,19 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    const adultsNum = Math.max(1, Math.min(10, parseInt(adults) || 1));
-    const childrenNum = Math.max(0, Math.min(10, parseInt(children) || 0));
+    if (contactType === "phone") {
+      const digits = contact.replace(/\D/g, "");
+      if (digits.length < 10 || digits.length > 15) {
+        return NextResponse.json(
+          { error: "Invalid phone number. Please include 10+ digits with country code." },
+          { status: 400 }
+        );
+      }
+    }
+
+    const isAttending = attending !== false;
+    const adultsNum = isAttending ? Math.max(1, Math.min(10, parseInt(adults) || 1)) : 0;
+    const childrenNum = isAttending ? Math.max(0, Math.min(10, parseInt(children) || 0)) : 0;
 
     const db = await getDb();
     const normalized = normalizeContact(contact, contactType);
@@ -89,6 +101,7 @@ export async function POST(request: NextRequest) {
           contact: contact.trim(),
           contactType,
           normalizedContact: normalized,
+          attending: isAttending,
           adults: adultsNum,
           children: childrenNum,
           updatedAt: now,

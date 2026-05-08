@@ -7,6 +7,7 @@ interface RsvpData {
   name: string;
   contact: string;
   contactType: "email" | "phone";
+  attending: boolean;
   adults: number;
   children: number;
 }
@@ -62,6 +63,7 @@ export default function Home() {
   const [contactType, setContactType] = useState<"email" | "phone">("email");
   const [name, setName] = useState("");
   const [contact, setContact] = useState("");
+  const [attending, setAttending] = useState<boolean | null>(null);
   const [adults, setAdults] = useState(1);
   const [children, setChildren] = useState(0);
   const [status, setStatus] = useState<{
@@ -89,6 +91,7 @@ export default function Home() {
           const data = await res.json();
           if (data.found) {
             setName(data.rsvp.name);
+            setAttending(data.rsvp.attending !== undefined ? data.rsvp.attending : true);
             setAdults(data.rsvp.adults);
             setChildren(data.rsvp.children);
             setIsEditing(true);
@@ -150,6 +153,24 @@ export default function Home() {
       return;
     }
 
+    if (contactType === "phone") {
+      const digits = contact.replace(/\D/g, "");
+      if (digits.length < 10 || digits.length > 15) {
+        setStatus({
+          type: "error",
+          message: "Please enter a valid phone number (10+ digits with country code).",
+        });
+        setIsSubmitting(false);
+        return;
+      }
+    }
+
+    if (attending === null) {
+      setStatus({ type: "error", message: "Please let us know if you will attend." });
+      setIsSubmitting(false);
+      return;
+    }
+
     try {
       const res = await fetch("/api/rsvp", {
         method: "POST",
@@ -158,19 +179,25 @@ export default function Home() {
           name: name.trim(),
           contact: contact.trim(),
           contactType,
-          adults,
-          children,
+          attending: !!attending,
+          adults: attending ? adults : 0,
+          children: attending ? children : 0,
         } as RsvpData),
       });
 
       const data = await res.json();
 
       if (res.ok) {
+        const successMsg = attending
+          ? (isEditing
+            ? "✨ Your RSVP has been updated! We look forward to seeing you."
+            : "✨ Thank you for your RSVP! We look forward to seeing you.")
+          : (isEditing
+            ? "Your RSVP has been updated. We're sorry you can't make it!"
+            : "Thank you for letting us know. We're sorry you can't make it!");
         setStatus({
           type: "success",
-          message: isEditing
-            ? "✨ Your RSVP has been updated! We look forward to seeing you."
-            : "✨ Thank you for your RSVP! We look forward to seeing you.",
+          message: successMsg,
         });
         setIsEditing(true);
       } else {
@@ -303,62 +330,91 @@ export default function Home() {
                 />
               </div>
 
-              {/* Guests count */}
-              <div className="form-row">
-                <div className="form-group">
-                  <label className="form-label">Adults</label>
-                  <div className="counter-group">
-                    <button
-                      type="button"
-                      className="counter-btn"
-                      onClick={() => setAdults(Math.max(1, adults - 1))}
-                      aria-label="Decrease adults"
-                      id="btn-adults-minus"
-                    >
-                      −
-                    </button>
-                    <span className="counter-value" id="adults-count">
-                      {adults}
-                    </span>
-                    <button
-                      type="button"
-                      className="counter-btn"
-                      onClick={() => setAdults(Math.min(10, adults + 1))}
-                      aria-label="Increase adults"
-                      id="btn-adults-plus"
-                    >
-                      +
-                    </button>
-                  </div>
-                </div>
-
-                <div className="form-group">
-                  <label className="form-label">Children</label>
-                  <div className="counter-group">
-                    <button
-                      type="button"
-                      className="counter-btn"
-                      onClick={() => setChildren(Math.max(0, children - 1))}
-                      aria-label="Decrease children"
-                      id="btn-children-minus"
-                    >
-                      −
-                    </button>
-                    <span className="counter-value" id="children-count">
-                      {children}
-                    </span>
-                    <button
-                      type="button"
-                      className="counter-btn"
-                      onClick={() => setChildren(Math.min(10, children + 1))}
-                      aria-label="Increase children"
-                      id="btn-children-plus"
-                    >
-                      +
-                    </button>
-                  </div>
+              {/* Will you attend? */}
+              <div className="form-group">
+                <label className="form-label">Will You Attend?</label>
+                <div className="attend-toggle">
+                  <button
+                    type="button"
+                    className={`attend-toggle-btn attend-yes ${attending === true ? "active" : ""}`}
+                    onClick={() => setAttending(true)}
+                    id="toggle-attend-yes"
+                  >
+                    <span className="attend-icon">🎉</span>
+                    <span>Joyfully Accept</span>
+                  </button>
+                  <button
+                    type="button"
+                    className={`attend-toggle-btn attend-no ${attending === false ? "active" : ""}`}
+                    onClick={() => setAttending(false)}
+                    id="toggle-attend-no"
+                  >
+                    <span className="attend-icon">😔</span>
+                    <span>Regretfully Decline</span>
+                  </button>
                 </div>
               </div>
+
+              {/* Guests count — only when attending */}
+              {attending === true && (
+                <div className="guest-section">
+                  <div className="form-row">
+                    <div className="form-group">
+                      <label className="form-label">Adults</label>
+                      <div className="counter-group">
+                        <button
+                          type="button"
+                          className="counter-btn"
+                          onClick={() => setAdults(Math.max(1, adults - 1))}
+                          aria-label="Decrease adults"
+                          id="btn-adults-minus"
+                        >
+                          −
+                        </button>
+                        <span className="counter-value" id="adults-count">
+                          {adults}
+                        </span>
+                        <button
+                          type="button"
+                          className="counter-btn"
+                          onClick={() => setAdults(Math.min(10, adults + 1))}
+                          aria-label="Increase adults"
+                          id="btn-adults-plus"
+                        >
+                          +
+                        </button>
+                      </div>
+                    </div>
+
+                    <div className="form-group">
+                      <label className="form-label">Children</label>
+                      <div className="counter-group">
+                        <button
+                          type="button"
+                          className="counter-btn"
+                          onClick={() => setChildren(Math.max(0, children - 1))}
+                          aria-label="Decrease children"
+                          id="btn-children-minus"
+                        >
+                          −
+                        </button>
+                        <span className="counter-value" id="children-count">
+                          {children}
+                        </span>
+                        <button
+                          type="button"
+                          className="counter-btn"
+                          onClick={() => setChildren(Math.min(10, children + 1))}
+                          aria-label="Increase children"
+                          id="btn-children-plus"
+                        >
+                          +
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              )}
 
               <button
                 type="submit"
@@ -370,7 +426,9 @@ export default function Home() {
                   ? "Submitting..."
                   : isEditing
                     ? "Update RSVP"
-                    : "Submit RSVP"}
+                    : attending === false
+                      ? "Send Regrets"
+                      : "Submit RSVP"}
               </button>
             </form>
 

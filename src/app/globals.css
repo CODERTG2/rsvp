@@ -456,6 +456,74 @@ body {
   font-weight: 500;
 }
 
+/* ===== ATTEND TOGGLE ===== */
+.attend-toggle {
+  display: flex;
+  gap: 12px;
+}
+
+.attend-toggle-btn {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  padding: 18px 12px;
+  background: rgba(8, 14, 36, 0.5);
+  border: 1.5px solid rgba(201, 168, 76, 0.12);
+  border-radius: 12px;
+  color: var(--text-muted);
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 0.95rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.35s ease;
+  letter-spacing: 0.02em;
+}
+
+.attend-toggle-btn:hover {
+  border-color: rgba(201, 168, 76, 0.3);
+  background: rgba(201, 168, 76, 0.04);
+}
+
+.attend-icon {
+  font-size: 1.4rem;
+  line-height: 1;
+}
+
+.attend-toggle-btn.attend-yes.active {
+  background: rgba(76, 175, 80, 0.08);
+  border-color: rgba(76, 175, 80, 0.35);
+  color: #a5d6a7;
+  box-shadow: 0 0 20px rgba(76, 175, 80, 0.06);
+}
+
+.attend-toggle-btn.attend-no.active {
+  background: rgba(231, 76, 76, 0.06);
+  border-color: rgba(231, 76, 76, 0.3);
+  color: #ef9a9a;
+  box-shadow: 0 0 20px rgba(231, 76, 76, 0.04);
+}
+
+/* Guest section slide-in */
+.guest-section {
+  animation: guestSlideIn 0.4s ease-out;
+  overflow: hidden;
+}
+
+@keyframes guestSlideIn {
+  from {
+    opacity: 0;
+    max-height: 0;
+    transform: translateY(-8px);
+  }
+  to {
+    opacity: 1;
+    max-height: 200px;
+    transform: translateY(0);
+  }
+}
+
 /* ===== SUBMIT BUTTON ===== */
 .submit-btn {
   width: 100%;
@@ -667,7 +735,7 @@ body {
 
 .admin-stats {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(4, 1fr);
   gap: 16px;
   margin-bottom: 32px;
 }
@@ -827,7 +895,7 @@ body {
   }
 
   .admin-stats {
-    grid-template-columns: 1fr;
+    grid-template-columns: repeat(2, 1fr);
   }
 
   .data-table-wrapper {

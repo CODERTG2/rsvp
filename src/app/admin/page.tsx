@@ -6,6 +6,7 @@ interface RsvpEntry {
   name: string;
   contact: string;
   contactType: "email" | "phone";
+  attending: boolean;
   adults: number;
   children: number;
   createdAt: string;
@@ -88,8 +89,10 @@ export default function AdminPage() {
     setRsvps([]);
   };
 
-  const totalAdults = rsvps.reduce((sum, r) => sum + r.adults, 0);
-  const totalChildren = rsvps.reduce((sum, r) => sum + r.children, 0);
+  const attendingRsvps = rsvps.filter((r) => r.attending !== false);
+  const decliningRsvps = rsvps.filter((r) => r.attending === false);
+  const totalAdults = attendingRsvps.reduce((sum, r) => sum + r.adults, 0);
+  const totalChildren = attendingRsvps.reduce((sum, r) => sum + r.children, 0);
 
   if (!authenticated) {
     return (
@@ -143,8 +146,12 @@ export default function AdminPage() {
       {/* Stats */}
       <div className="admin-stats">
         <div className="stat-card">
-          <div className="stat-value" id="stat-rsvps">{rsvps.length}</div>
-          <div className="stat-label">RSVPs</div>
+          <div className="stat-value" id="stat-attending">{attendingRsvps.length}</div>
+          <div className="stat-label">Attending</div>
+        </div>
+        <div className="stat-card">
+          <div className="stat-value" id="stat-declined">{decliningRsvps.length}</div>
+          <div className="stat-label">Declined</div>
         </div>
         <div className="stat-card">
           <div className="stat-value" id="stat-adults">{totalAdults}</div>
@@ -198,6 +205,7 @@ export default function AdminPage() {
               <tr>
                 <th>Name</th>
                 <th>Contact</th>
+                <th>Status</th>
                 <th>Adults</th>
                 <th>Children</th>
                 <th>Submitted</th>
@@ -220,6 +228,25 @@ export default function AdminPage() {
                       {rsvp.contactType === "email" ? "✉" : "📱"}
                     </span>
                     {rsvp.contact}
+                  </td>
+                  <td style={{ textAlign: "center" }}>
+                    <span style={{
+                      display: "inline-block",
+                      padding: "3px 10px",
+                      borderRadius: 6,
+                      fontSize: "0.75rem",
+                      fontWeight: 500,
+                      letterSpacing: "0.04em",
+                      background: rsvp.attending !== false
+                        ? "rgba(76, 175, 80, 0.1)"
+                        : "rgba(231, 76, 76, 0.1)",
+                      border: `1px solid ${rsvp.attending !== false
+                        ? "rgba(76, 175, 80, 0.25)"
+                        : "rgba(231, 76, 76, 0.25)"}`,
+                      color: rsvp.attending !== false ? "#a5d6a7" : "#ef9a9a",
+                    }}>
+                      {rsvp.attending !== false ? "✓ Yes" : "✗ No"}
+                    </span>
                   </td>
                   <td style={{ textAlign: "center" }}>{rsvp.adults}</td>
                   <td style={{ textAlign: "center" }}>{rsvp.children}</td>
