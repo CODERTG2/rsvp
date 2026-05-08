@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useCallback, useMemo } from "react";
+import { useState, useEffect, useCallback, useMemo, useRef } from "react";
 import Image from "next/image";
 
 interface RsvpData {
@@ -75,6 +75,9 @@ export default function Home() {
   const [lookupDone, setLookupDone] = useState(false);
 
   // Debounced lookup for existing RSVP
+  const statusRef = useRef(status);
+  statusRef.current = status;
+
   const lookupRsvp = useCallback(
     async (contactValue: string, type: "email" | "phone") => {
       if (!contactValue || contactValue.length < 5) {
@@ -103,14 +106,14 @@ export default function Home() {
           } else {
             setIsEditing(false);
             setLookupDone(true);
-            if (status?.type === "info") setStatus(null);
+            if (statusRef.current?.type === "info") setStatus(null);
           }
         }
       } catch {
         // silently fail lookup
       }
     },
-    [status]
+    [] // no dependencies — uses ref for status
   );
 
   // Debounce effect for contact field
