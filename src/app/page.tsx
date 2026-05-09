@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect, useCallback, useMemo, useRef } from "react";
+import { useRouter } from "next/navigation";
 import Image from "next/image";
 
 interface RsvpData {
@@ -60,6 +61,7 @@ function Particles() {
 }
 
 export default function Home() {
+  const router = useRouter();
   const [contactType, setContactType] = useState<"email" | "phone">("email");
   const [name, setName] = useState("");
   const [contact, setContact] = useState("");
@@ -191,18 +193,8 @@ export default function Home() {
       const data = await res.json();
 
       if (res.ok) {
-        const successMsg = attending
-          ? (isEditing
-            ? "✨ Your RSVP has been updated! We look forward to seeing you."
-            : "✨ Thank you for your RSVP! We look forward to seeing you.")
-          : (isEditing
-            ? "Your RSVP has been updated. We're sorry you can't make it!"
-            : "Thank you for letting us know. We're sorry you can't make it!");
-        setStatus({
-          type: "success",
-          message: successMsg,
-        });
-        setIsEditing(true);
+        // Redirect to confirmation page
+        router.push(attending ? "/confirmed" : "/declined");
       } else {
         setStatus({
           type: "error",

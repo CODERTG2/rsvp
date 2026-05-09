@@ -911,4 +911,247 @@ body {
   .admin-header h1 {
     font-size: 1.3rem;
   }
+
+  .confirmation-card {
+    padding: 36px 24px 32px;
+  }
+
+  .confirm-title {
+    font-size: 1.7rem;
+  }
+}
+
+/* ===== CONFIRMATION PAGES ===== */
+.confirmation-card {
+  position: relative;
+  max-width: 460px;
+  width: 100%;
+  margin-top: 60px;
+  background: var(--card-bg);
+  backdrop-filter: blur(40px) saturate(1.6);
+  -webkit-backdrop-filter: blur(40px) saturate(1.6);
+  border: 1px solid var(--card-border);
+  border-radius: 20px;
+  padding: 48px 40px 44px;
+  box-shadow:
+    0 4px 12px rgba(0, 0, 0, 0.15),
+    0 24px 48px rgba(0, 0, 0, 0.2),
+    inset 0 1px 0 rgba(255, 255, 255, 0.03);
+  overflow: hidden;
+  text-align: center;
+}
+
+/* Subtle gradient shine at top of card */
+.confirmation-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent 10%, rgba(201, 168, 76, 0.4) 50%, transparent 90%);
+}
+
+/* Corner glow */
+.confirmation-card::after {
+  content: '';
+  position: absolute;
+  top: -60px;
+  right: -60px;
+  width: 160px;
+  height: 160px;
+  background: radial-gradient(circle, rgba(201, 168, 76, 0.05) 0%, transparent 70%);
+  pointer-events: none;
+}
+
+/* Icon wrapper */
+.confirm-icon-wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100px;
+  height: 100px;
+  margin: 0 auto 24px;
+  border-radius: 50%;
+  animation: confirmPulse 2s ease-in-out infinite;
+}
+
+.confirm-icon-success {
+  background: rgba(76, 175, 80, 0.08);
+  border: 2px solid rgba(76, 175, 80, 0.25);
+  color: #a5d6a7;
+}
+
+.confirm-icon-declined {
+  background: rgba(201, 168, 76, 0.06);
+  border: 2px solid rgba(201, 168, 76, 0.2);
+  color: var(--gold);
+}
+
+@keyframes confirmPulse {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(76, 175, 80, 0.1); }
+  50% { box-shadow: 0 0 0 16px rgba(76, 175, 80, 0); }
+}
+
+.confirm-emoji {
+  font-size: 2.8rem;
+  line-height: 1;
+}
+
+/* Animated checkmark SVG */
+.confirm-checkmark {
+  display: block;
+}
+
+.confirm-checkmark-circle {
+  stroke-dasharray: 151;
+  stroke-dashoffset: 151;
+  animation: checkCircleDraw 0.6s ease-out 0.3s forwards;
+}
+
+.confirm-checkmark-check {
+  stroke-dasharray: 40;
+  stroke-dashoffset: 40;
+  animation: checkDraw 0.4s ease-out 0.8s forwards;
+}
+
+@keyframes checkCircleDraw {
+  to { stroke-dashoffset: 0; }
+}
+
+@keyframes checkDraw {
+  to { stroke-dashoffset: 0; }
+}
+
+/* Title */
+.confirm-title {
+  font-family: 'Playfair Display', serif;
+  font-size: 2rem;
+  font-weight: 700;
+  color: var(--gold);
+  margin-bottom: 4px;
+  letter-spacing: 0.04em;
+  text-shadow: 0 2px 12px rgba(201, 168, 76, 0.15);
+}
+
+/* Message texts */
+.confirm-message {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 1.25rem;
+  color: var(--cream);
+  margin-bottom: 8px;
+  font-weight: 500;
+  letter-spacing: 0.01em;
+}
+
+.confirm-detail {
+  font-size: 0.92rem;
+  color: var(--text-muted);
+  line-height: 1.7;
+  margin-bottom: 28px;
+  font-weight: 300;
+}
+
+/* Event details box */
+.confirm-event-box {
+  background: rgba(8, 14, 36, 0.5);
+  border: 1px solid rgba(201, 168, 76, 0.12);
+  border-radius: 12px;
+  padding: 20px 24px;
+  margin-bottom: 24px;
+  text-align: left;
+}
+
+.confirm-event-label {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 0.75rem;
+  font-weight: 500;
+  color: rgba(201, 168, 76, 0.7);
+  text-transform: uppercase;
+  letter-spacing: 0.15em;
+  margin-bottom: 12px;
+}
+
+.confirm-event-text {
+  font-size: 0.9rem;
+  color: var(--cream);
+  margin-bottom: 6px;
+  font-weight: 300;
+  letter-spacing: 0.01em;
+}
+
+.confirm-event-text:last-child {
+  margin-bottom: 0;
+}
+
+/* Helpful note */
+.confirm-note {
+  background: rgba(201, 168, 76, 0.04);
+  border: 1px solid rgba(201, 168, 76, 0.1);
+  border-radius: 10px;
+  padding: 14px 18px;
+  margin-bottom: 28px;
+  font-size: 0.82rem;
+  color: var(--gold-light);
+  line-height: 1.6;
+  font-weight: 300;
+}
+
+/* Back button */
+.confirm-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  padding: 16px 24px;
+  background: linear-gradient(135deg, var(--gold) 0%, var(--gold-light) 50%, var(--gold) 100%);
+  background-size: 200% auto;
+  border: none;
+  border-radius: 12px;
+  color: var(--navy-deep);
+  font-family: 'Playfair Display', serif;
+  font-size: 0.95rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  text-decoration: none;
+  cursor: pointer;
+  transition: all 0.4s ease;
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 4px 16px rgba(201, 168, 76, 0.2);
+}
+
+.confirm-btn:hover {
+  background-position: right center;
+  transform: translateY(-2px);
+  box-shadow:
+    0 6px 24px rgba(201, 168, 76, 0.3),
+    0 0 40px rgba(201, 168, 76, 0.1);
+}
+
+.confirm-btn:active {
+  transform: translateY(0);
+  box-shadow: 0 2px 8px rgba(201, 168, 76, 0.2);
+}
+
+/* Shimmer on button */
+.confirm-btn::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -150%;
+  width: 150%;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(255, 255, 255, 0.15) 50%,
+    transparent 100%
+  );
+  transition: left 0.7s ease;
+}
+
+.confirm-btn:hover::after {
+  left: 150%;
 }
