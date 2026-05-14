@@ -250,7 +250,7 @@ export default function Home() {
         <section className="rsvp-section">
           <div className="rsvp-card">
             <h1 className="rsvp-title">RSVP</h1>
-            <p className="rsvp-subtitle">Kindly respond by May 12th, 2026</p>
+            <p className="rsvp-subtitle">Kindly respond by May 15th, 2026</p>
             <div className="gold-line-wide" style={{ marginBottom: 28 }} />
 
             <form onSubmit={handleSubmit} id="rsvp-form">
